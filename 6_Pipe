@@ -1,0 +1,35 @@
+# Named_Pipe 라는 이름 있는 파이프를 만들고 이를 통하여 "Hello world!"라는 메세지를 전송하고 받는 프로그램을 작성하시오. 
+
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    int pd, n;
+    char msg[] = "Hello. world";
+
+    printf("Server =====\n");
+
+    if (mkfifo("./NAMED-FIFO", 0666) == -1) {
+        perror("mkfifo");
+        exit(1);
+    }
+
+    if ((pd = open("./NAMED-FIFO", O_WRONLY)) == -1) {
+        perror("open");
+        exit(1);
+    }
+
+    printf("To Client : %s\n", msg);
+
+    n = write(pd, msg, strlen(msg)+1);
+    if (n == -1) {
+        perror("write");
+        exit(1);
+    }
+    close(pd);
+}
+~                                                                                                                    ~                                                                                                                    ~                                                                                                                    ~                                                                                                                    ~       
